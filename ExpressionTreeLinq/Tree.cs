@@ -39,10 +39,7 @@ namespace ExpressionTreeLinq
                 list = node.Query.Split("#");
                 if (list.Length==1)
                 {
-                    // 第一种思路：显得有点多余
-                    //生成页节点：先记录节点的逻辑类型，后通过遍历算法，反向生成节点的Data;
-                    //todo: 遍历-生成算法：先生成所有叶子节点的Data,再反向生成非叶节点的Data;
-                    // 第二种思路：在此处生成叶子节点的Data,在结尾添加非叶子Data
+                    // 第二种思路：在此处生成叶子节点的Data,在添加完叶子后反向生成父节点Data
                     var cond1 = new UserCondition { Key = "Name", Value = "A" };
                     node.Data = (ICriterion<T>)GetCriterion(cond1);
                     return;
