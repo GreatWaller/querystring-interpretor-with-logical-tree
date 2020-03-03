@@ -39,7 +39,7 @@ namespace ExpressionTreeLinq
                 list = node.Query.Split("#");
                 if (list.Length==1)
                 {
-                    // 第二种思路：在此处生成叶子节点的Data,在添加完叶子后反向生成父节点Data
+                    // 思路：在此处生成叶子节点的Data,在添加完叶子后反向生成父节点Data
                     var cond1 = new UserCondition { Key = "Name", Value = "A" };
                     node.Data = (ICriterion<T>)GetCriterion(cond1);
                     return;
@@ -55,7 +55,7 @@ namespace ExpressionTreeLinq
             var right = new TreeNode<T>() { Query = list[1] };
             node.Right = right;
             CreateTree(node.Right);
-            //此处为第二种思路：依据logical类型生成Criterion
+            //思路：依据logical类型生成Criterion
             node.Data = new AndCriterion<T>(left.Data, right.Data);
             Console.WriteLine("loop");
         }
