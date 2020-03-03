@@ -29,24 +29,24 @@ namespace ExpressionTreeLinq{
         /// 判断括号是否合法，同时返回左侧最外层括号的右括号位置
         /// </summary>
         /// <returns></returns>
-        public bool IsValid(out int endAt)
+        public static bool IsValid(string query, out int endAt)
         {
             endAt = 0;
             Stack<char> stack = new Stack<char>();
-            for (int i = 0; i < _query.Length; i++)
+            for (int i = 0; i < query.Length; i++)
             {
-                if (_query[i]=='(')
+                if (query[i]=='(')
                 {
-                    stack.Push(_query[i]);
+                    stack.Push(query[i]);
                 }
                 else
                 {
                     if (stack.Count==0)
                     {
-                        endAt = i;
+                        endAt = i==0?0:i-1;
                         return false;
                     }
-                    if (_query[i]==')' && stack.Pop()!='(')
+                    if (query[i]==')' && stack.Pop()!='(')
                     {
                         return false;
                     }

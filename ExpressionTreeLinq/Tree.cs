@@ -30,12 +30,22 @@ namespace ExpressionTreeLinq
             var list = node.Query.Split("#");
             if (list.Length==1)
             {
+                //20200303 优先处理括号
+                //第一步：去除两端的最外层括号
+                //第二步：调用BracketStack.IsValid()
+                int endAt = 0;
+                if (list[0][0]=='(')
+                {
+                    node.Query = list[0].Substring(1, list[0].Length - 2);
+                    BracketStack.IsValid(node.Query, out endAt);
+                }
+
                 // 逻辑运算符 只有 and 和 or; 
                 // todo: and 优先级比or 高，在不考虑括号的情况下 应先从 OR 拆分条件
                 // todo: not较特殊，等想通后再处理
-                // todo: 括号提升优先级
+
                 logic = Regex.Match(node.Query, AND_OR).Value;
-                node.Query = REGEX_AND_OR.Replace(node.Query, "#", 1, 0);
+                node.Query = REGEX_AND_OR.Replace(node.Query, "#", 1, endAt);
                 list = node.Query.Split("#");
                 if (list.Length==1)
                 {

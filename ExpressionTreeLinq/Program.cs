@@ -48,8 +48,8 @@ namespace ExpressionTreeLinq
             foreach (var company in res)
                 Console.WriteLine(company.Name);
 
-            string queryString = 
-                "(Name.Contains(\"A\") OR (Name.Contains(\"T\")) & (Age>=5 OR Age<=30 AND Age>60) & (Age >1)";
+            string queryString =
+                "((Age>=5 OR Age<=30) AND (((Age>60) OR (Age<10)) OR (Age =1))) & (Age>=5 OR Age<=30 AND Age>60) & (Age >1)";
             //remove space
             queryString=queryString.Replace(" ","");
             System.Console.WriteLine(queryString);
@@ -77,7 +77,7 @@ namespace ExpressionTreeLinq
                 "(Age>=5 OR Age<=30) AND (((Age>60) OR (Age<10)) OR (Age =1))";
             bracketString = bracketString.Replace(" ", "");
             int endAt;
-            bool isValid=new BracketStack(bracketString).IsValid(out endAt);
+            bool isValid=BracketStack.IsValid(bracketString,out endAt);
             Console.WriteLine($"{bracketString} is {isValid}, and End at {endAt}");
 
         }
