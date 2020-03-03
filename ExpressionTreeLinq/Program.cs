@@ -44,13 +44,14 @@ namespace ExpressionTreeLinq
             foreach (var company in r)
                 Console.WriteLine(company.Name);
 
-            var res = a.HandleQueryable(data);
-            foreach (var company in res)
-                Console.WriteLine(company.Name);
-
+            //var res = a.HandleQueryable(data);
+            //foreach (var company in res)
+            //    Console.WriteLine(company.Name);
+            Console.WriteLine("================================");
             string queryString =
                 "((Age>=5 OR Age<=30) AND (((Age>60) AND (Age<10)) OR (Age =1))) " +
                 "& (((Age!=5) AND (Age<>30)) OR (Age!>60)) & (Age !<1)";
+            queryString = "((Name LIKE A) OR (Name LIKE i))&(Age =5)";
             //remove space
             queryString=queryString.Replace(" ","");
             System.Console.WriteLine(queryString);
@@ -60,7 +61,7 @@ namespace ExpressionTreeLinq
             head.Query = queryString;
 
             new CompanyTree<Company>().CreateTree(head);
-            res= head.Data.HandleQueryable(data);
+            var res= head.Data.HandleQueryable(data);
             foreach (var company in res)
                 Console.WriteLine(company.Name);
 

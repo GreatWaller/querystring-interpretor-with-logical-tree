@@ -22,7 +22,7 @@ namespace ExpressionTreeLinq
         private static Regex REGEX_AND = new Regex("&");
         private static Regex REGEX_AND_OR = new Regex("AND|OR");
         private static string[] OPERATORS = { "=", ">", "<", ">=", "<=", "<>", "!=", "!<", "!>" };
-        private static Regex REGEX_OPERATOR = new Regex("(=|>(?:=){0,1}|<(?:=|>)?|(<>)|!=|!<|!>)");
+        private static Regex REGEX_OPERATOR = new Regex("(=|>(?:=){0,1}|<(?:=|>)?|(<>)|!=|!<|!>)|(LIKE)");
         public void CreateTree(TreeNode<T> node)
         {
             //node.Query = queryString;
@@ -40,12 +40,10 @@ namespace ExpressionTreeLinq
                     node.Query = list[0].Substring(1, list[0].Length - 2);
                     BracketStack.IsValid(node.Query, out endAt);
                 }
-
                 // 逻辑运算符 只有 and 和 or; 
                 // todo: and 优先级比or 高，因此 应先从 OR 拆分条件。补充优先级可要求传入时加括号处理
                 // todo: not较特殊，等想通后再处理。补充：！为一元运算符，构建逻辑树时不应处理，
                 //       可并入叶子节点一并处理
-
                 logic = Regex.Match(node.Query.Substring(endAt,node.Query.Length-1- endAt), AND_OR).Value;
                 node.Query = REGEX_AND_OR.Replace(node.Query, "#", 1, endAt);
                 list = node.Query.Split("#");
@@ -69,8 +67,15 @@ namespace ExpressionTreeLinq
             node.Right = right;
             CreateTree(node.Right);
             //思路：依据logical类型生成Criterion
-            node.Data = new AndCriterion<T>(left.Data, right.Data);
-            Console.WriteLine("loop");
+            if (node.LogicalOperator=="AND")
+            {
+                node.Data = new AndCriterion<T>(left.Data, right.Data);
+            }
+            else
+            {
+                node.Data = new OrCriterion<T>(left.Data, right.Data);
+            }
+            
         }
 
         protected abstract ICriterion<T> GetCriterion(UserCondition cond);
@@ -80,7 +85,21 @@ namespace ExpressionTreeLinq
     {
         protected override ICriterion<Company> GetCriterion(UserCondition cond)
         {
-            return new NameCriterion(cond) as ICriterion<Company>;
+            ICriterion<Company> criterion;
+            //通过UserCondition.Key对应不同的字段
+            switch (cond.Key.ToLower())
+            {
+                case "name":
+                    criterion = new NameCriterion(cond) as ICriterion<Company>;
+                    break;
+                case "age":
+                    criterion = new AgeCriterion(cond) as ICriterion<Company>;
+                    break;
+                default:
+                    criterion = null;
+                    break;
+            }
+            return criterion;
         }
     }
 

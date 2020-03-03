@@ -27,7 +27,15 @@ namespace ExpressionTreeLinq
 
         public IQueryable<Company> HandleQueryable(IQueryable<Company> query)
         {
-            return query.Where(p => p.Name.Contains(_company.Value));
+            switch (_company.Operator?.ToLower())
+            {
+                case "like":
+                    query= query.Where(p => p.Name.Contains(_company.Value));
+                    break;
+                default:
+                    break;
+            }
+            return query;
         }
     }
 }

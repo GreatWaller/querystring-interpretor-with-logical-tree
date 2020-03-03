@@ -12,7 +12,7 @@ namespace ExpressionTreeLinq{
         private readonly string _query;
 
         /// <summary>
-        /// "((Age>=5 OR Age<=30) AND Age>60)"
+        /// "(((Age>=5) OR (Age<=30)) AND Age>60)"
         /// 1：去两端括号,这一步需要在CreateTree中事先处理
         /// 2：取最左侧括号内字符
         /// 3：取完左括号之后检查是否为 AND/OR，进而辅助Tree拆分。

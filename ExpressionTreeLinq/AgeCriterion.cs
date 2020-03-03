@@ -29,7 +29,34 @@ namespace ExpressionTreeLinq
 
         public IQueryable<Company> HandleQueryable(IQueryable<Company> query)
         {
-            return query.Where(p => p.Age == Convert.ToInt32(_condition.Value));
+            var age = Convert.ToInt32(_condition.Value);
+            switch (_condition.Operator)
+            {
+                case "=":
+                    query.Where(p => p.Age == age);
+                    break;
+                case ">":
+                    query.Where(p => p.Age > age);
+                    break;
+                case "<":
+                    query.Where(p => p.Age < age);
+                    break;
+                case ">=":
+                case "!<":
+                    query.Where(p => p.Age >= age);
+                    break;
+                case "<=":
+                case "!>":
+                    query.Where(p => p.Age <= age);
+                    break;
+                case "!=":
+                case "<>":
+                    query.Where(p => p.Age != age);
+                    break;
+                default:
+                    break;
+            }
+            return query;
         }
 
         //public static Expression GetConvertedSource(ParameterExpression sourceParameter,
