@@ -27,6 +27,7 @@ namespace ExpressionTreeLinq{
         }
         /// <summary>
         /// 判断括号是否合法，同时返回左侧最外层括号的右括号位置
+        /// 要求起始字符为'(',则可返回true.在实际运用时因首先去除了最外层的括号，刚均返回false.
         /// </summary>
         /// <returns></returns>
         public static bool IsValid(string query, out int endAt)

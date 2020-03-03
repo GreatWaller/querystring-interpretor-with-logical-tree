@@ -49,7 +49,8 @@ namespace ExpressionTreeLinq
                 Console.WriteLine(company.Name);
 
             string queryString =
-                "((Age>=5 OR Age<=30) AND (((Age>60) OR (Age<10)) OR (Age =1))) & (Age>=5 OR Age<=30 AND Age>60) & (Age >1)";
+                "((Age>=5 OR Age<=30) AND (((Age>60) AND (Age<10)) OR (Age =1))) " +
+                "& (((Age!=5) AND (Age<>30)) OR (Age!>60)) & (Age !<1)";
             //remove space
             queryString=queryString.Replace(" ","");
             System.Console.WriteLine(queryString);
@@ -67,8 +68,8 @@ namespace ExpressionTreeLinq
 
             var bx = 1;
             var by = 10;
-            var ba = bx > 1 && bx < 0 || by > 0;
-            var bb = bx > 1 && (bx < 0 || by > 0);
+            var ba = bx == 1 && bx < 0 || by > 0;
+            var bb = bx == 1 && (bx < 0 || by > 0);
 
             Console.WriteLine(ba.ToString());
             Console.WriteLine(bb.ToString());

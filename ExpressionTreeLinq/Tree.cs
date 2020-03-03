@@ -21,7 +21,8 @@ namespace ExpressionTreeLinq
         private static string AND_OR = "AND|OR";
         private static Regex REGEX_AND = new Regex("&");
         private static Regex REGEX_AND_OR = new Regex("AND|OR");
-        
+        private static string[] OPERATORS = { "=", ">", "<", ">=", "<=", "<>", "!=", "!<", "!>" };
+        private static Regex REGEX_OPERATOR = new Regex("(=|>(?:=){0,1}|<(?:=|>)?|(<>)|!=|!<|!>)");
         public void CreateTree(TreeNode<T> node)
         {
             //node.Query = queryString;
@@ -41,17 +42,19 @@ namespace ExpressionTreeLinq
                 }
 
                 // 逻辑运算符 只有 and 和 or; 
-                // todo: and 优先级比or 高，在不考虑括号的情况下 应先从 OR 拆分条件
-                // todo: not较特殊，等想通后再处理
+                // todo: and 优先级比or 高，因此 应先从 OR 拆分条件。补充优先级可要求传入时加括号处理
+                // todo: not较特殊，等想通后再处理。补充：！为一元运算符，构建逻辑树时不应处理，
+                //       可并入叶子节点一并处理
 
-                logic = Regex.Match(node.Query, AND_OR).Value;
+                logic = Regex.Match(node.Query.Substring(endAt,node.Query.Length-1- endAt), AND_OR).Value;
                 node.Query = REGEX_AND_OR.Replace(node.Query, "#", 1, endAt);
                 list = node.Query.Split("#");
                 if (list.Length==1)
                 {
                     // 思路：在此处生成叶子节点的Data,在添加完叶子后反向生成父节点Data
-                    var cond1 = new UserCondition { Key = "Name", Value = "A" };
-                    node.Data = (ICriterion<T>)GetCriterion(cond1);
+                    var data = REGEX_OPERATOR.Split(node.Query);
+                    var cond = new UserCondition { Key = data[0], Value = data[2],Operator=data[1] };
+                    node.Data = GetCriterion(cond);
                     return;
                 }
             }
