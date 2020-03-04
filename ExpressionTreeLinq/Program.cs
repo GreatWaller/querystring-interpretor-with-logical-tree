@@ -123,7 +123,7 @@ namespace ExpressionTreeLinq
                         sort = l[2];
                         break;
                     default:
-                        qString += "&"+item;
+                        qString += (string.IsNullOrEmpty(qString) ? "" : "&") + item;
                         break;
                 }
             }
