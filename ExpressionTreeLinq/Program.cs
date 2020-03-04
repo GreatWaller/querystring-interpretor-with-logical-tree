@@ -51,7 +51,10 @@ namespace ExpressionTreeLinq
             string queryString =
                 "((Age>=5 OR Age<=30) AND (((Age>60) AND (Age<10)) OR (Age =1))) " +
                 "& (((Age!=5) AND (Age<>30)) OR (Age!>60)) & (Age !<1)";
-            queryString = "((Name LIKE A) OR (Name LIKE i))&(Age =5)";
+
+
+            //test here
+            queryString = "(((Name LIKE A) OR (Name LIKE i)) AND (Name LIKE i))&(Age =5)";
             //remove space
             queryString=queryString.Replace(" ","");
             System.Console.WriteLine(queryString);
@@ -81,7 +84,49 @@ namespace ExpressionTreeLinq
             int endAt;
             bool isValid=BracketStack.IsValid(bracketString,out endAt);
             Console.WriteLine($"{bracketString} is {isValid}, and End at {endAt}");
+            Console.WriteLine("=======================================");
 
+            string fullString = "(((Name LIKE A) OR (Name LIKE i)) AND (Name LIKE i))&(Age =5)" +
+                "&(MaxNumRecordReturn=200) &( PageRecordNum =25) &( RecordStartNo =1) " +
+                "& (Sort = Person.AgeUpLimit)";
+            fullString = fullString.Replace(" ", "");
+            Regex REGEX_COMMON_FIELDS = new Regex("((?:MaxNumRecordReturn|PageRecordNum|RecordStartNo|Sort)=)");
+            //var arr = REGEX_COMMON_FIELDS.Split(fullString,2);
+            //foreach (var item in arr)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            //var m = REGEX_COMMON_FIELDS.Match(fullString)?.Value;
+            var list = fullString.Split("&");
+            string qString = "";
+            string maxNumRecordReturn;
+            string pageRecordNum;
+            string recordStartNo;
+            string sort;
+            foreach (var item in list)
+            {
+                var s = item.Substring(1, item.Length - 2);
+                var m = REGEX_COMMON_FIELDS.Match(s);
+                var l = REGEX_COMMON_FIELDS.Split(s);
+                switch (m.Value)
+                {
+                    case "MaxNumRecordReturn=":
+                        maxNumRecordReturn = l[2];
+                        break;
+                    case "PageRecordNum=":
+                        pageRecordNum = l[2];
+                        break;
+                    case "RecordStartNo=":
+                        recordStartNo = l[2];
+                        break;
+                    case "Sort=":
+                        sort = l[2];
+                        break;
+                    default:
+                        qString += "&"+item;
+                        break;
+                }
+            }
         }
     }
 }

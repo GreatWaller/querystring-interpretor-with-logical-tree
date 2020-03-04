@@ -21,8 +21,8 @@ namespace ExpressionTreeLinq
         private static string AND_OR = "AND|OR";
         private static Regex REGEX_AND = new Regex("&");
         private static Regex REGEX_AND_OR = new Regex("AND|OR");
-        private static string[] OPERATORS = { "=", ">", "<", ">=", "<=", "<>", "!=", "!<", "!>" };
         private static Regex REGEX_OPERATOR = new Regex("(=|>(?:=){0,1}|<(?:=|>)?|(<>)|!=|!<|!>)|(LIKE)");
+        private static string[] OPERATORS = { "=", ">", "<", ">=", "<=", "<>", "!=", "!<", "!>" };
         public void CreateTree(TreeNode<T> node)
         {
             //node.Query = queryString;
